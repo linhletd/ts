@@ -1,5 +1,10 @@
+interface Option {
+  search: string,
+  value: string
+}
+
 export default {
-  getUrl(urls, key, replaceOptions) {
+  getUrl(urls: Object, key: string, replaceOptions?: Array<Option>) {
     let url = urls[key];
 
     if (!url) {

@@ -1,16 +1,13 @@
 import axios from 'axios';
-// import store from 'store';
 import BrowserProvider from '../../browser/BrowserProvider';
-import APIProvider from '../../api/url/APIProvider';
+import APIProvider from '../url/APIProvider';
 
 import { getRefreshToken, getToken, login, logout, isLoggedIn, getInfo, storePermission } from '../../TokenProvider';
 
-// let user = store.get('user');
-// let loggedIn = store.get('loggedIn');
-let refreshRequest = undefined;
-let reGetPermissionRequest = undefined;
+let refreshRequest: Promise<any>| undefined = undefined;
+let reGetPermissionRequest: Promise<any>| undefined = undefined;
 const Request = axios.create({
-  baseURL: process.env.REACT_APP_BASE_URL_STATE + process.env.REACT_APP_BASE_URL_PATH,
+  baseURL: process.env.NEXT_PUBLIC_BASE_URL_STATE + process.env.NEXT_PUBLIC_BASE_URL_PATH,
 });
 
 Request.interceptors.response.use(
@@ -23,7 +20,7 @@ Request.interceptors.response.use(
         try {
           refreshRequest =
             refreshRequest ||
-            axios.post(process.env.REACT_APP_BASE_URL_STATE + process.env.REACT_APP_BASE_URL_PATH + APIProvider.getUrl('REFRESH_TOKEN') + '?refreshToken=' + getRefreshToken(), {
+            axios.post(process.env.NEXT_PUBLIC_BASE_URL_STATE + process.env.NEXT_PUBLIC_BASE_URL_PATH + APIProvider.getUrl('REFRESH_TOKEN') + '?refreshToken=' + getRefreshToken(), {
               headers: { Authentication: getToken() },
             });
           const res = await refreshRequest;
@@ -32,7 +29,7 @@ Request.interceptors.response.use(
             refreshRequest = undefined;
             reGetPermissionRequest =
               reGetPermissionRequest ||
-              axios.get(process.env.REACT_APP_BASE_URL_STATE + process.env.REACT_APP_BASE_URL_PATH + `${APIProvider.getUrl('USER_FIND_PERMISSION')}?id=${getInfo().userId}`, {
+              axios.get(process.env.NEXT_PUBLIC_BASE_URL_STATE + process.env.NEXT_PUBLIC_BASE_URL_PATH + `${APIProvider.getUrl('USER_FIND_PERMISSION')}?id=${getInfo().userId}`, {
                 headers: { Authentication: getToken() },
               });
             const getPermissionRes = await reGetPermissionRequest;

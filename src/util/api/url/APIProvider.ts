@@ -198,8 +198,13 @@ export const URLs = {
   UPLOAD: '/upload',
 };
 
+interface Option {
+  search: string,
+  value: string
+}
+
 export default {
-  getUrl(key, replaceOptions) {
+  getUrl(key: string, replaceOptions?: Array<Option>) {
     return URLProvider.getUrl(URLs, key, replaceOptions);
   },
 };

@@ -4,7 +4,7 @@ export function isLoggedIn() {
   return !!store.get('loggedIn');
 }
 
-export function login(data) {
+export function login(data: Object) {
   store.set('loggedIn', true);
   store.set('user', data);
 }
@@ -33,7 +33,7 @@ export function getRefreshToken() {
   }
 }
 
-export function storePermission(data) {
+export function storePermission(data: Array<Object>) {
   store.set('permission', data);
 }
 
@@ -51,7 +51,7 @@ export function getRole() {
     return store.get('role') || [];
   }
 }
-export function storeInfo(data) {
+export function storeInfo(data: Object) {
   store.set('info', data);
 }
 
