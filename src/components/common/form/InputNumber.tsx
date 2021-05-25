@@ -1,5 +1,5 @@
 import React from 'react';
-import WithController from './WithController';
+import withController from './withController';
 
 function InputNumber({onChange, isInvalid, label, placeholder, ...rest}) {
   function handleKeyDown(e) {
@@ -40,4 +40,4 @@ function InputNumber({onChange, isInvalid, label, placeholder, ...rest}) {
   );
 }
 
-export default WithController(InputNumber)
+export default withController(InputNumber)
