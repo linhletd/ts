@@ -1,11 +1,6 @@
-import useSWR from 'swr'
-
 import Request from '../util/api/engine/Request';
 import { getToken } from '../util/TokenProvider';
 
-interface params {
-  params?:any
-}
 type method = 'get'|'post'|'put'|'patch'|'delete';
 
 const REQUEST = {
@@ -16,7 +11,10 @@ const REQUEST = {
   DELETE: 'delete',
 };
 
-const _fetchData = (operation: method, url: string, dataParam?: params ) => {
+export const createFetcher = (url: string, dataParam?:  any, operation?: method) => {
+  if(!operation){
+    operation = 'get';
+  }
   console.debug(`useRequest - _getData - url: ${url}, dataParam: ${JSON.stringify(dataParam)}`);
   let parameters = '';
   if(dataParam && dataParam.params){
@@ -32,7 +30,7 @@ const _fetchData = (operation: method, url: string, dataParam?: params ) => {
   };
   console.debug(`useRequest - _getData - config: ${JSON.stringify(config)}`);
   return async () => {
-    let req;
+    let req: Promise<any>;
     if (operation === REQUEST.POST) {
       req = call(Request[REQUEST.POST](url, dataParam, config), true);
     } else {
@@ -49,19 +47,19 @@ export async function callDelete(url: string) {
   return call(Request[REQUEST.DELETE](url, { headers: { Authentication: getToken() } }));
 }
 
-export async function callLogin(url: string, dataParam?:params) {
+export async function callLogin(url: string, dataParam?: any) {
   return call(Request[REQUEST.POST](url, dataParam));
 }
 
-export async function callPost(url: string, dataParam?:params) {
+export async function callPost(url: string, dataParam?: any) {
   return call(Request[REQUEST.POST](url, dataParam, { headers: { Authentication: getToken() } }));
 }
 
-export async function callPut(url: string, dataParam?:params) {
+export async function callPut(url: string, dataParam?: any) {
   return call(Request[REQUEST.PUT](url, dataParam, { headers: { Authentication: getToken() } }));
 }
 
-export async function callGet(url: string,  dataParam?:params) {
+export async function callGet(url: string,  dataParam?: any) {
   let parameters = '';
   if (dataParam && dataParam.params) {
     parameters = Object.keys(dataParam.params)
@@ -86,10 +84,11 @@ async function call(request: Promise<any>, isHook?: boolean) {
     console.log(`useRequest - call - data: ${data}`);
     return { code: 200, data: data.data };
   } catch (error) {
-    if (isHook) return Promise.reject({ data: error.response?.data, status: error.response?.status });
+    let hasNetworkError = error.message === 'Network Error' && { message: 'Network Error' };
+    if (isHook) return Promise.reject({ data: hasNetworkError || error.response?.data, code: hasNetworkError ? -1 : error.response?.status });
     console.error(`useRequest - call- error: ${JSON.stringify(error)}`);
-    if (error.message && error.message === 'Network Error') {
-      return { code: -1, data: { message: 'Network Error' } };
+    if (hasNetworkError) {
+      return { code: -1, data: hasNetworkError };
     }
     console.error(`useRequest - call - error: ${JSON.stringify(error.response.status)}`);
     let { status, data } = error.response;
