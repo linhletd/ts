@@ -1,11 +1,11 @@
 import React, { useMemo } from 'react';
 import Select from './Select';
 import APIProvider from '../../../util/api/url/APIProvider';
-import { callGet, createFetcher } from '../../../util/request';
+import { createFetcher } from '../../../util/request';
 import useSWR from 'swr';
 import withController from './withController';
 
-function SelectAsync({ apiKey, stableQueryKey, params, labelField, valueField, placeholder, excludes, dataCallback, reqMethod, loadedCallback, supplimentOptions, keepDataOnOption, ...rest }) {
+function SelectAsync({ apiKey, stableQueryKey, shouldDisable, params, labelField, valueField, placeholder, excludes, dataCallback, reqMethod, loadedCallback, supplimentOptions, keepDataOnOption, ...rest }) {
   if (reqMethod && reqMethod.toLowerCase() !== 'post') {
     params = {
       params: {
@@ -16,7 +16,7 @@ function SelectAsync({ apiKey, stableQueryKey, params, labelField, valueField, p
   }
 
   const url = APIProvider.getUrl(apiKey);
-  const { data, error } = useSWR([url, stableQueryKey], createFetcher(url, params, reqMethod));
+  const { data, error } = useSWR(!shouldDisable && [url, stableQueryKey], createFetcher(url, params, reqMethod));
 
   function generateLabel(obj) {
     if (labelField instanceof Array) {
@@ -43,20 +43,24 @@ function SelectAsync({ apiKey, stableQueryKey, params, labelField, valueField, p
       return acc;
     }, []);
   }
+
   let options = useMemo(() => {
-    if (supplimentOptions) {
-      return supplimentOptions.concat(getOptions(data.content || data));
-    } else {
-      return getOptions(data.content || data);
+    if(data){
+      if (supplimentOptions) {
+        return supplimentOptions.concat(getOptions(data.content || data));
+      } else {
+        return getOptions(data.content || data);
+      }
     }
+    return []
   }, [data]);
 
-  if (status === 'loading') {
+  if (!error && !data) {
     placeholder = 'loading...';
-  } else if (status === 'error') {
+  } else if (error) {
     placeholder = 'load failed!';
   }
 
   return <Select placeholder={placeholder} options={options} {...rest} />;
 }
-export default withController(SelectAsync)
+export default SelectAsync

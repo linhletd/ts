@@ -6,7 +6,7 @@ interface Option {
   label: string
 }
 
-function Select({options, isInvalid, label, ...rest}){
+function Select({options, isInvalid, label, placeholder, ...rest}){
   options = useMemo(() => {
     return options && options.sort((a: Option, b: Option) => a.label?.localeCompare(b.label)) || [];
   }, [options]);
@@ -16,6 +16,7 @@ function Select({options, isInvalid, label, ...rest}){
       {label && <label>{label}</label>}
       <ReactSelect
         options={options}
+        placeholder={placeholder || (label ? label + '...' : undefined)}
         {...rest}
       />
       {isInvalid && <small className='text-danger'>{isInvalid}</small>}
