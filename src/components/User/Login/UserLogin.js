@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { Helmet } from 'react-helmet';
 import { callLogin } from 'src/util/request';
 import { useRouter } from 'next/router'
 
@@ -17,15 +16,9 @@ export default function UserLogin() {
   const router = useRouter();
   useEffect(()=>{
     if(isLoggedIn()){
-      router.replace('/')
+      router.replace(BrowserProvider.getUrl('DEAL_LIST'))
     }
   },[])
-
-  if (isLoggedIn()) {
-    console.info('UserLogin - already logged in, redirect to home page');
-    return null
-  }
-
 
   const handleClose = () => setAlert({ show: false });
   const onSubmitEditForm = async (values) => {
@@ -39,7 +32,7 @@ export default function UserLogin() {
         username: data.username,
         avatar: data.avatar,
       });
-      window.location.reload();
+      router.replace(BrowserProvider.getUrl('DEAL_LIST'))
     } else {
       setAlert({ content: <p className="text-danger">{data.message}</p>, show: true });
     }
@@ -47,7 +40,6 @@ export default function UserLogin() {
 
   return (
     <>
-      <Helmet title={t('page.login')} />
       <UserLoginForm onSubmitHandler={onSubmitEditForm} />
       <Alert handleClose={handleClose} title={t('page.login.dialog.warning')} {...alert} />
     </>

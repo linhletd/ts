@@ -1,22 +1,23 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { logout } from 'src/util/TokenProvider';
 import { getInfo } from 'src/util/TokenProvider';
 import Alert from 'src/components/common/modal/Alert';
 import BrowserProvider from 'src/util/browser/BrowserProvider';
-import Link from 'next/link'
 // import ChangePasswordForm from './ChangePassword/ChangePasswordForm';
 
 export default function RightNavBarLinks() {
   const { t } = useTranslation();
   const [collapse, setCollapse] = useState('');
   const [alert, setMessage] = useState({ show: false, content: '' });
-  const info = getInfo();
-  let avatar = '/images/default-avatar.png';
-  if (typeof info === 'object') {
-    avatar = info.avatar;
-  }
+  const [avatar, setAvatar] = useState('/images/default-avatar.png');
+  useEffect(()=>{
+    const info = getInfo();
+    if (typeof info === 'object') {
+      setAvatar(info.avatar);
+    }
+  })
 
   function handleLogout(e) {
     e.preventDefault();

@@ -1,20 +1,18 @@
 import Head from 'next/head'
-import Layout from 'src/components/common/layout/Layout';
 import {useTranslation} from 'react-i18next';
 import UserLogin from 'src/components/User/Login/UserLogin';
 
 export default function Login() {
     const {t} = useTranslation()
-    return (
+  return (
         <>
         <Head>
             <title>{t('page.login')}</title>
             <link rel="icon" href="/favicon.ico" />
         </Head>
-        <Layout>
-            <UserLogin/>
-        </Layout>
+        <div className=" row justify-content-center align-items-center" style={{ height: '80vh' }}>
+            <div className={`col-lg-4 col-md-6 col-sm-9 shadow-sm`}><UserLogin/></div>
+        </div>
         </>
     )
 }
-  

@@ -5,11 +5,14 @@ import MainSideBar from '../Menu/MainSideBar';
 import RightNavBarLinks from '../Menu/RightNavBarLinks';
 import { isLoggedIn } from 'src/util/TokenProvider';
 import { useMediaQuery } from 'react-responsive';
+import { useRouter } from 'next/router'
 
 export default function Layout({ ...props }) {
   const [collapse, setCollapse] = useState(false);
+  const [extraClass, setExtraClass] = useState('')
   const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1224px)' });
   const sidebarRef = useRef();
+  const router = useRouter();
 
   useEffect(() => {
     if (isTabletOrMobile && !collapse) {
@@ -19,13 +22,27 @@ export default function Layout({ ...props }) {
     }
   }, [isTabletOrMobile]);
 
-  if (!isLoggedIn()) {
-    return (
-      <div className=" row justify-content-center align-items-center" style={{ height: '80vh' }}>
-        <div className={`${isTabletOrMobile ? 'col-9' : 'col-4'} shadow-sm`}>{props.children}</div>
-      </div>
-    );
-  }
+  useEffect(()=>{
+    let exClass = '';
+    if (!isTabletOrMobile) {
+      if (collapse) {
+        exClass = 'sidebar-collapse';
+      }
+    } else {
+      if (collapse) {
+        exClass = 'sidebar-collapse';
+      } else {
+        exClass = 'sidebar-open';
+      }
+    }
+    (exClass !== extraClass) && setExtraClass(exClass)
+  }, [isTabletOrMobile, collapse])
+
+  useEffect(()=>{
+    if(!isLoggedIn()){
+      router.replace('/login')
+    }
+  },[])
 
   function onMenuClick(e) {
     e.preventDefault();
@@ -36,19 +53,6 @@ export default function Layout({ ...props }) {
     let target = e.target;
     if (!collapse && isTabletOrMobile && target !== sidebarRef.current && !sidebarRef.current?.contains(target)) {
       setCollapse(true);
-    }
-  }
-
-  let extraClass = '';
-  if (!isTabletOrMobile) {
-    if (collapse) {
-      extraClass = 'sidebar-collapse';
-    }
-  } else {
-    if (collapse) {
-      extraClass = 'sidebar-collapse';
-    } else {
-      extraClass = 'sidebar-open';
     }
   }
   return (
