@@ -1,58 +1,37 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import APIProvider from '../../../util/api/url/APIProvider';
 import { callGet } from '../../../hooks/useRequest';
-import HistoryManager from './InputTextHistory';
-import ErrorBoundary from '../../Fallback/ErrorBoundary';
+import HistoryManager from '../../../util/InputTextHistory';
+import _ from 'lodash'
 
-export default function usersChecked(props) {
-  return (
-    <ErrorBoundary>
-      <_usersChecked {...props} />
-    </ErrorBoundary>
-  );
-}
-function _usersChecked({ validatedUserList, ...props }) {
+function usersChecked({ validatedUserList, onChange: handleChange, ...props }) {
   let [inputValue, _setInputValue] = useState('');
   let [showBoard, setBoardShow] = useState(false);
-  let [store] = useState(new HistoryManager());
+  let textManager = useMemo(() =>new HistoryManager(),[]);
   let inputRef = useRef();
-  let {
-    field,
-    formik: { setFieldValue, setFieldTouched, errors, touched, setFieldError, values },
-    label,
-    resetSubcriberStore,
-    placeholder,
-  } = props;
+  let {field, label, placeholder} = props;
   resetSubcriberStore &&
     (resetSubcriberStore[field] = () => {
       _setInputValue('');
-      store.reset();
+      textManager.reset();
     });
-  let isInValid = touched[field] && errors[field];
+  let isInvalid = touched[field] && errors[field];
   let selections = values[field] || [];
-  function handleChange(arr) {
-    setFieldValue(field, arr);
-  }
   useEffect(() => {
     if (selections.length && !inputValue) {
       setInputValue(selections.map((cur) => cur.label).join(';'));
     }
   });
-  function handleTouch() {
-    if (!touched[field]) {
-      setFieldTouched(field, true, true);
-    }
-  }
   function setInputValue(text, isIgnoreRecord) {
     if (!isIgnoreRecord) {
       let { selectionStart: start, selectionEnd: end } = inputRef.current;
-      store.createNewRecord(text, start, end);
+      textManager.createNewRecord(text, start, end);
     }
     _setInputValue(text);
   }
   function callsearch(strVal) {
     let newOptions = [];
-    let pa = strVal.split(';').filter((cur, i, arr) => cur && arr.indexOf(cur) === i);
+    let pa = strVal.split(/;|,/).filter((cur, i, arr) => cur && arr.indexOf(cur) === i);
     if (validatedUserList) {
       pa.map((username) => {
         let user = validatedUserList.find((user) => user.label === username);
@@ -90,7 +69,6 @@ function _usersChecked({ validatedUserList, ...props }) {
   }
   function handleInputChange(e) {
     e.preventDefault();
-    handleTouch();
     handleMouseOver();
     let newValue;
     if (typeof e === 'string') {
@@ -111,7 +89,7 @@ function _usersChecked({ validatedUserList, ...props }) {
     }
     if (e.code === 'KeyZ' && e.ctrlKey && !e.shiftKey) {
       e.preventDefault();
-      let prev = store.undo();
+      let prev = textManager.undo();
       if (prev) {
         setInputValue(prev.text, true);
         prev.start && prev.end && input.setSelectionRange(prev.start, prev.end);
@@ -119,7 +97,7 @@ function _usersChecked({ validatedUserList, ...props }) {
       }
     }
     if (e.code === 'KeyZ' && e.ctrlKey && e.shiftKey) {
-      let next = store.redo();
+      let next = textManager.redo();
       if (next) {
         setInputValue(next.text, true);
         next.start && next.end && input.setSelectionRange(next.start, next.end);
@@ -193,17 +171,16 @@ function _usersChecked({ validatedUserList, ...props }) {
           onKeyDown={handleKeyDown}
           onPaste={handlePaste}
           className="form-control"
-          style={{ width: '100%', outline: isInValid ? '1px solid red' : 'none', height: '38px' }}
           ref={inputRef}
           placeholder={placeholder}
         />
-        {isInValid && <div style={{ color: '#e62a2a', fontSize: '0.75em', marginTop: '3px', gridArea: '2/2/3/3', paddingBottom: '10px' }}>{isInValid}</div>}
+        {isInvalid && <small className='text-danger'>{isInvalid}</small>}
         {selections && !!selections.length && (
           <div
             className="p-1"
             style={{
               position: 'absolute',
-              top: isInValid ? '60px' : '38px',
+              top: isInvalid ? '60px' : '38px',
               maxHeight: '400px',
               width: '100%',
               overflow: 'auto',

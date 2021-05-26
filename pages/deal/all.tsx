@@ -1,4 +1,5 @@
+import Layout from 'src/components/common/layout/Layout'
 export default function DealList() {
-    return <div>Deal List</div>
+    return <Layout>123</Layout>
 }
   

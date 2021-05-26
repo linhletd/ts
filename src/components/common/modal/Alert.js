@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import ErrorBoundary from '../../pages/Fallback/ErrorBoundary';
+import ErrorBoundary from 'src/components/generic/ErrorBoundary';
 
 export default function Alert({ title, show, handleClose, size, backdrop, headless, content, feetless, footerContent, buttonList }) {
   console.debug(`Alert - show: ${show}`);

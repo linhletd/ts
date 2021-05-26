@@ -3,8 +3,8 @@ import {Controller} from 'react-hook-form';
 import ErrorBoundary from '../../generic/ErrorBoundary';
 
 
-export default function withController(_Component){
-    return function Component(props){
+export default function withController(Component){
+    return function _Component(props){
         let {name, control, defaulValue, ...rest} = props;
         return (
             <ErrorBoundary>

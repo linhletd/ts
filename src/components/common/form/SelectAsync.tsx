@@ -3,7 +3,6 @@ import Select from './Select';
 import APIProvider from '../../../util/api/url/APIProvider';
 import { createFetcher } from '../../../util/request';
 import useSWR from 'swr';
-import withController from './withController';
 
 function SelectAsync({ apiKey, stableQueryKey, shouldDisable, params, labelField, valueField, placeholder, excludes, dataCallback, reqMethod, loadedCallback, supplimentOptions, keepDataOnOption, ...rest }) {
   if (reqMethod && reqMethod.toLowerCase() !== 'post') {

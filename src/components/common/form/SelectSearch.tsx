@@ -2,6 +2,7 @@ import React, { useState, useMemo, useEffect } from 'react';
 import APIProvider from '../../../util/api/url/APIProvider';
 import { callGet } from '../../../util/request';
 import AsyncSelect from 'react-select/async';
+import { components } from 'react-select';
 import withController from './withController';
 
 interface Params {
@@ -9,7 +10,7 @@ interface Params {
   filter?: string
 }
 
-function SearchSelectAsync( {apiKey, filterName, labelField, label, onChange, isClearable, isInvalid, disabled, subFilter, ...rest }) {
+function SearchSelectAsync( {isMulti, apiKey, filterName, labelField, label, onChange, isClearable, isInvalid, disabled, subFilter, ...rest }) {
   
   let [defaultData, setDefaultData] = useState([]);
   let subFilterText = subFilter &&
@@ -83,13 +84,51 @@ function SearchSelectAsync( {apiKey, filterName, labelField, label, onChange, is
         cacheOptions
         defaultOptions={defaultOptions}
         loadOptions={loadOptions}
+        components={isMulti ? { Option, ValueContainer, MultiValue }: undefined}
         isClearable={isClearable !== undefined ? isClearable : true}
         isDisabled={disabled || false}
+        closeMenuOnSelect={isMulti ? false : undefined}
+        hideSelectedOptions={isMulti ? false : undefined}
+        isMulti={isMulti || false}
         {...rest}
       />
       {isInvalid && <small className='text-danger'>{isInvalid}</small>}
     </>
   );
 }
+
+const Option = (props) => {
+  return (
+    <div>
+      <components.Option {...props} className="bg-light">
+        <input type="checkbox" checked={props.isSelected} onChange={() => null} /> <span>{props.label}</span>
+      </components.Option>
+    </div>
+  );
+};
+
+const ValueContainer = ({ children, ...props }) => {
+  const currentValues = props.getValue();
+  let toBeRendered = children;
+  if (currentValues.length >= 2) {
+    toBeRendered = [currentValues.length + ' mục ', children[1]];
+  } else if (currentValues.length === 1) {
+    let label = children[0][0].props.data.label;
+    if (label.length > 15) {
+      label = label.slice(0, 16) + '...';
+    }
+    toBeRendered = [label, children[1]];
+  }
+  return <components.ValueContainer {...props}>{toBeRendered}</components.ValueContainer>;
+};
+
+const MultiValue = (props) => {
+  let labelToBeDisplayed = `${props.data.label}`;
+  return (
+    <components.MultiValue {...props}>
+      <span>{labelToBeDisplayed}</span>
+    </components.MultiValue>
+  );
+};
 
 export default withController(SearchSelectAsync);

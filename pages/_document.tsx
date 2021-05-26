@@ -9,7 +9,11 @@ class MyDocument extends Document {
   render() {
     return (
       <Html>
-        <Head />
+        <Head>
+          <link rel="stylesheet" href="/css/fontawesome-free/all.min.css"/>
+          <link rel="stylesheet" href="/css/adminlte.min.css"/>
+          <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet"/>
+        </Head>
         <body>
           <Main />
           <NextScript />
