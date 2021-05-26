@@ -3,7 +3,7 @@ import Footer from './Footer';
 import LeftNavBarLinks from '../Menu/LeftNavBarLinks';
 import MainSideBar from '../Menu/MainSideBar';
 import RightNavBarLinks from '../Menu/RightNavBarLinks';
-// import { isLoggedIn } from 'src/util/TokenProvider';
+import { isLoggedIn } from 'src/util/TokenProvider';
 import { useMediaQuery } from 'react-responsive';
 
 export default function Layout({ ...props }) {

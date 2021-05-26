@@ -1,6 +1,7 @@
 import React from 'react';
 
-export default function Input({isInvalid, label, placeholder, ...rest}) {
+export default function Input({errors, label, placeholder, ...rest}) {
+  const isInvalid = errors[rest.name]?.message
     return (
       <>
         {label && <label>{label}</label>}

@@ -1,28 +1,34 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Redirect } from 'react-router-dom';
 
 import { Helmet } from 'react-helmet';
-import { callLogin } from '../../../hooks/useRequest';
+import { callLogin } from 'src/util/request';
+import { useRouter } from 'next/router'
 
 import UserLoginForm from './UserLoginForm';
-import CenteredContent from '../../../components/Layout/CenteredContent';
-import Alert from '../../../components/Modal/Alert';
-import { isLoggedIn, login, storePermission, storeInfo } from '../../../util/TokenProvider';
-import APIProvider from '../../../util/api/url/APIProvider';
-import BrowserProvider from '../../../util/browser/BrowserProvider';
+import Alert from 'src/components/common/modal/Alert';
+import { isLoggedIn, login, storePermission, storeInfo } from 'src/util/TokenProvider';
+import APIProvider from 'src/util/api/url/APIProvider';
+import BrowserProvider from 'src/util/browser/BrowserProvider';
 
 export default function UserLogin() {
   const { t } = useTranslation();
   const [alert, setAlert] = useState({ content: '', show: false });
+  const router = useRouter();
+  useEffect(()=>{
+    if(isLoggedIn()){
+      router.replace('/')
+    }
+  },[])
+
   if (isLoggedIn()) {
     console.info('UserLogin - already logged in, redirect to home page');
-    return <Redirect to={BrowserProvider.getUrl('DASHBOARD')} />;
+    return null
   }
 
+
   const handleClose = () => setAlert({ show: false });
-  const onSubmitEditForm = async (values, actions) => {
-    actions.setSubmitting(true);
+  const onSubmitEditForm = async (values) => {
     const { data, code } = await callLogin(APIProvider.getUrl('LOGIN', null), values);
     console.debug(`UserLogin - data: ${JSON.stringify(data)}`);
     if (code === 200) {
@@ -35,21 +41,15 @@ export default function UserLogin() {
       });
       window.location.reload();
     } else {
-      if (code === 400) {
-        actions.resetForm(true);
-      }
       setAlert({ content: <p className="text-danger">{data.message}</p>, show: true });
-      actions.setSubmitting(false);
     }
   };
 
   return (
     <>
       <Helmet title={t('page.login')} />
-      <CenteredContent>
-        <UserLoginForm onSubmitHandler={onSubmitEditForm} />
-        <Alert handleClose={handleClose} title={t('page.login.dialog.warning')} {...alert} />
-      </CenteredContent>
+      <UserLoginForm onSubmitHandler={onSubmitEditForm} />
+      <Alert handleClose={handleClose} title={t('page.login.dialog.warning')} {...alert} />
     </>
   );
 }

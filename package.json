@@ -10,6 +10,7 @@
     "standard:fix": "ts-standard --fix"
   },
   "dependencies": {
+    "@hookform/resolvers": "^2.5.1",
     "axios": "^0.21.1",
     "date-fns": "^2.21.3",
     "i18next": "^20.3.0",
@@ -24,7 +25,8 @@
     "react-responsive": "^8.2.0",
     "react-select": "^4.3.1",
     "store": "^2.0.12",
-    "swr": "^0.5.6"
+    "swr": "^0.5.6",
+    "yup": "^0.32.9"
   },
   "devDependencies": {
     "@types/react": "17.0.6",

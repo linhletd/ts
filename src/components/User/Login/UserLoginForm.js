@@ -1,42 +1,34 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-
-import ButtonLoading from '../../../components/Button/ButtonLoading';
-import { Form, Formik } from 'formik';
-
+import ButtonLoading from 'src/components/common/button/ButtonLoading';
 import UserLoginFormValidationSchema from './UserLoginFormValidationSchema';
-import Input from '../../../components/Form/Input';
+import { yupResolver } from '@hookform/resolvers/yup';
+import Input from 'src/components/common/form/Input';
+import { useForm } from "react-hook-form";
 
-export default function UserLoginForm({ onSubmitHandler }) {
+export default function UserLoginForm() {
   const { t } = useTranslation();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting }
+  } = useForm({
+    resolver: yupResolver(UserLoginFormValidationSchema),
+    mode: "onBlur"
+  });
+  const onSubmit = (data) => {
+    alert(JSON.stringify(data));
+  };
+
   return (
-    <div>
-      <h1>{t('page.login.text.login-to-system')}</h1>
-      <Formik enableReinitialize initialValues={{ username: '', password: '' }} validationSchema={UserLoginFormValidationSchema} onSubmit={onSubmitHandler}>
-        {(formik) => (
-          <Form className=".was-validated">
-            <Input
-              field="username"
-              label={t('page.login.text.username')}
-              placeholder={t('page.login.text.username.placeholder')}
-              isValid={formik.touched.username && formik.errors.username}
-              type="text"
-            />
-            <Input
-              field="password"
-              label={t('page.login.text.password')}
-              placeholder={t('page.login.text.password.placeholder')}
-              isValid={formik.touched.password && formik.errors.password}
-              type="password"
-            />
-            <div className="form-group">
-              <ButtonLoading type="submit" loading={formik.isSubmitting} onClick={formik.handleSubmit} icon="paper-plane">
-                {t('page.login.text.login')}
-              </ButtonLoading>
-            </div>
-          </Form>
-        )}
-      </Formik>
-    </div>
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <div className='mr-3'>
+        <Input errors = {errors} label={t('page.login.text.username')} {...register("userName")} />
+      </div>
+      <div className='mr-3'>
+        <Input type='password' errors = {errors} label={t('page.login.text.password')} {...register("password")} />
+      </div>
+      <ButtonLoading loading={isSubmitting}>{t('page.login.text.login')}</ButtonLoading>
+    </form>
   );
 }

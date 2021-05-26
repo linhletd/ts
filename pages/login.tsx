@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import Layout from 'src/components/common/layout/Layout';
 import {useTranslation} from 'react-i18next';
-import UserLogin from 'src/components/common/layout/Layout';
+import UserLogin from 'src/components/User/Login/UserLogin';
 
 export default function Login() {
     const {t} = useTranslation()
