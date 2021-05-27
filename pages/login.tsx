@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import {useTranslation} from 'react-i18next';
-import UserLogin from 'src/components/User/Login/UserLogin';
+import UserLogin from 'src/containers/User/Login/UserLogin';
 
 export default function Login() {
     const {t} = useTranslation()

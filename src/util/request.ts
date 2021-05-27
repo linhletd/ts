@@ -18,10 +18,8 @@ export const createFetcher = (url: string, dataParam?:  any, operation?: method)
   console.debug(`useRequest - _getData - url: ${url}, dataParam: ${JSON.stringify(dataParam)}`);
   let parameters = '';
   if(dataParam && dataParam.params){
-    let query = new URLSearchParams()
-    Object.keys(dataParam.params).map((key) => {
-      query.set(key, dataParam.params[key])
-    })
+    let query = new URLSearchParams(dataParam.params)
+    parameters = query.toString();
   }
   let config = {
     headers: {

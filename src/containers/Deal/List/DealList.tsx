@@ -21,13 +21,13 @@ function _DealList() {
     return filterToPayload(filterData);
   }, [filterData]);
   return (
-    <>
+    <div className='col'>
       <ErrorBoundary>
         <h1>Filter here!</h1>
         {/* <DealFilter filterToPayload={filterToPayload} setFilterData={setFilterData} listChecked={checkedList} handleKeyReload={handleReload} filterData={filterData} /> */}
       </ErrorBoundary>
       <DealListPaginatedItems filterData={vals} checkedList={checkedList} setListChecked={setListChecked} />
-    </>
+    </div>
   );
 }
 

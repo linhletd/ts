@@ -2,6 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import BrowserProvider from 'src/util/browser/BrowserProvider';
 import APIProvider from 'src/util/api/url/APIProvider';
+import {createFetcher} from 'src/util/request';
 
 import useSWR from 'swr';
 
@@ -9,15 +10,16 @@ const style = { lineHeight: 1.2 };
 
 export default function CustomerInfo({ row }) {
   const { t } = useTranslation();
-  let { data, error } = useSWR(['CONTACT_LIST_CHILD', row.contact.id], APIProvider.getUrl('CONTACT_LIST_CHILD'), {
+  let { data, error } = useSWR(['CONTACT_LIST_CHILD', row.contact.id], createFetcher(APIProvider.getUrl('CONTACT_LIST_CHILD'), {
     params: {
       contactId: row.contact.id,
     },
-  });
+  }));
 
   if(!data){
     return error ? t('error') + '!' : 'loading...'
   }
+  const classes = data.length >= 5 ? data.map(cur=> cur.studentClass).join('; ').slice(50) + '...' : data.map(cur=> cur.studentClass).join('; ');
 
   return (
     <>
@@ -42,7 +44,7 @@ export default function CustomerInfo({ row }) {
             {row.email || 'N/A'}
           </p>
           <p>
-            {t('page.contact.customer.text.class')} {data?.length ? data.map(cur=> cur.studentClass).join('; ').slice(50) + '...': error ? t('error') + '!' : 'loading...' || 'N/A'}
+            {t('page.contact.customer.text.class')} {classes || 'N/A'}
           </p>
         </small>
       </div>

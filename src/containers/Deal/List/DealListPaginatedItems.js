@@ -122,25 +122,21 @@ export default function DealListPaginatedItems({ setListChecked, checkedList, fi
     <>
       <DataTable data={data.content} columns={columns} checkedList={checkedList} urlKey={'DEAL_EDIT'} noButton={true} startNo={data.number * data.size} totalElements={data.totalElements} />
 
-      <div className="container">
-        <div className="row">
-          <div className="col float-left">
-            <Pagination
-              activePage={data.number + 1}
-              onChange={handlePageChange}
-              itemsCountPerPage={data.size}
-              totalItemsCount={data.totalElements || 0}
-              pageRangeDisplayed={5}
-              itemClass="page-item"
-              linkClass="page-link"
-            />
-          </div>
+      <div className="row justify-content-between">
+        <div className="col">
+          <Pagination
+            activePage={data.number + 1}
+            onChange={handlePageChange}
+            itemsCountPerPage={data.size}
+            totalItemsCount={data.totalElements || 0}
+            pageRangeDisplayed={5}
+            itemClass="page-item"
+            linkClass="page-link"
+          />
+        </div>
 
-          <div className="col">
-            <div className="col-3 p-0 float-right mb-2 ml-3">
-              <SelectPageSize setSize={handleChangeSize} size={size} />
-            </div>
-          </div>
+        <div className="col-4 col-sm-3 col-md-2 justify-content-end">
+            <SelectPageSize setSize={handleChangeSize} size={size} />
         </div>
       </div>
     </>
