@@ -2,7 +2,8 @@ import React, { useState, useRef, useEffect, useMemo } from 'react';
 import APIProvider from '../../../util/api/url/APIProvider';
 import { callGet } from '../../../hooks/useRequest';
 import HistoryManager from '../../../util/InputTextHistory';
-import _ from 'lodash'
+
+/*must change to use with react-hook-form*/
 
 function usersChecked({ validatedUserList, onChange: handleChange, ...props }) {
   let [inputValue, _setInputValue] = useState('');

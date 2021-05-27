@@ -1,39 +1,35 @@
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import useSWR from 'swr';
 
-import { Form, Formik } from 'formik';
-
-import ButtonLoading from '../../../components/Button/ButtonLoading';
 import { Button } from 'react-bootstrap';
+import ButtonLoading from 'src/components/common/button/ButtonLoading';
 
-import Select from '../../../components/Form/ReactSelectFormik';
-import DatePicker from '../../../components/Form/DatePickerFormik';
-import Input from '../../../components/Form/CustomInputFormik';
-import AsyncMultiSelect from '../../Common/AsyncSearchSelect/AsyncMultiSelect';
-import PhoneInput from '../../../components/Form/PhoneInput';
-import NumberInput from '../../../components/Form/NumberInputFormik';
-import { callPost, useGet } from '../../../hooks/useRequest';
-import Constants from '../../../util/Constants';
+import Select from 'src/components/common/form/Select';
+import DatePicker from 'src/components/common/form/DatePicker';
+import Input from 'src/components/common/form/Input';
+import SelectAsync from 'src/components/common/form/SelectAsync';
+import PhoneInput from 'src/components/common/form/InputPhone';
+import NumberInput from 'src/components/common/form/InputNumber';
+import { callPost, createFetcher } from 'src/util/request';
+import Constants from 'src/util/Constants';
 import APIProvider from '../../../util/api/url/APIProvider';
 import useDealFilterValidation from './DealFilterValidation';
-import ButtonRefreshData from '../../../components/Button/ButtonRefreshData';
+import ButtonRefreshData from 'src/components/common/button/ButtonRefreshData';
+import ButtonCreate from 'src/components/common/button/ButtonCreate';
 // import UploadFile from '../../Common/UploadFile';
-import DealDownload from '../../Common/DownloadByFilter';
+import DealDownload from 'src/components/generic/DownloadByFilter';
 import ContactListAction from '../Action/ContactListAction';
 import AssignDataButton from '../Action/DataAssign';
 import AutoDataAssignConfig from '../Action/AutoDataAssignConfig';
-import ButtonCreate from '../../../components/Button/ButtonCreate';
 import BrowserProvider from '../../../util/browser/BrowserProvider';
 import FilterShortCutSlide from './FilterShorcutSlide';
-import MultiSelectSearch from '../../Common/AsyncSearchSelect/SearchMultiAsyncSelect';
-import MultiSelect from '../../Common/AsyncSearchSelect/MultiSelect';
-import AsyncSelect from '../../Common/AsyncSearchSelect/AsyncSelect_Alt';
 
 import ImportAssign from '../Action/ImportAssign';
 import AutoDataAssign from '../Action/AutoDataAssign';
 import ImportGoogleSheet from '../Action/ImportGoogleSheet';
-import ErrorBoundary from '../../Fallback/ErrorBoundary';
-import { queryCache } from 'react-query';
+import ErrorBoundary from 'src/components/generic/ErrorBoundary';
+
 function getStageLabel(stage) {
   return `${stage.description} - ${stage.level}`;
 }
@@ -42,11 +38,12 @@ export default function DealFilterForm({ data, setFilterData, handleKeyReload, f
   const { t } = useTranslation();
   const DealFilterValidation = useDealFilterValidation();
   let [resetIdx, resetSlideColor] = useState();
-  let { data: stages = [] } = useGet('DEFAULT_DEAL_STAGE', APIProvider.getUrl('DEAL_LIST_STAGE_DEFAULT'), { params: { type: 'FOR_DEAL' } });
+  let { data: stages } = useGet('DEFAULT_DEAL_STAGE', APIProvider.getUrl('DEAL_LIST_STAGE_DEFAULT'), { params: { type: 'FOR_DEAL' } });
 
   // let userListOption = [{ value: true, label: t('page.deal.filter.option.noOwner.placeHolder') }, ...userList];
 
   let levelOptions = useMemo(() => {
+    if(!stages) return [];
     return stages
       .filter((cur) => /^L\d$/.test(cur.level))
       .sort((a, b) => Number(a.level[1]) - Number(b.level[1]))
