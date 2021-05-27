@@ -39,3 +39,17 @@ border-radius: 3px;
 .show-scroll *::-webkit-scrollbar-thumb:hover {
 background: grey; 
 }
+
+th:not(.ignore-over){
+  position: sticky;
+  position: -webkit-sticky;
+  top: -2px;
+  z-index: 1;
+}
+th{
+  background-color: rgb(219, 223, 223);
+}
+.over-sticky{
+  position: relative;
+  z-index: 2;
+}

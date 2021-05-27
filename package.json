@@ -22,9 +22,11 @@
     "react-helmet": "^6.1.0",
     "react-hook-form": "^7.6.6",
     "react-i18next": "^11.8.15",
+    "react-js-pagination": "^3.0.3",
     "react-loading": "^2.0.3",
     "react-responsive": "^8.2.0",
     "react-select": "^4.3.1",
+    "react-switch": "^6.0.0",
     "store": "^2.0.12",
     "swr": "^0.5.6",
     "yup": "^0.32.9"

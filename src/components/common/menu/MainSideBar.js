@@ -74,7 +74,7 @@ export default React.forwardRef(function MainSideBar(props, ref) {
                 <MenuItem title={t('component.menu.contact')} link={`${BrowserProvider.getUrl('CONTACT_LIST')}?page=1`} icon="fa-address-book" path="/contact" />
               </ComponentValidator>
               <ComponentValidator allowedAuthorities={['canListDeal', 'canListAllDeal']} authorityKey="permissions">
-                <MenuItem title={t('component.menu.deal')} link={`${BrowserProvider.getUrl('DEAL_LIST')}?page=1`} icon="fa-shopping-cart" path="/deal" />
+                <MenuItem title={t('component.menu.deal')} link={`${BrowserProvider.getUrl('DEAL_LIST')}?page=1&size=10&sort=createdAt%2Cdesc`} icon="fa-shopping-cart" path="/deal" />
               </ComponentValidator>
               <ComponentValidator allowedAuthorities={['canListPackage']} authorityKey="permissions">
                 <MenuItem title={t('component.menu.package')} link={`${BrowserProvider.getUrl('PACKAGE_LIST')}?page=1`} icon="fa-archive" path="/package" />

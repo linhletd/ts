@@ -1,12 +1,12 @@
-import Layout from 'src/components/common/layout/Layout';
 import RouteValidator from 'src/auth/routes/Validator';
+// import Head from 'next/head';
+import _DealList from 'src/components/Deal/List/DealList';
+
 export default function DealList() {
     return (
-        <Layout>
-            <RouteValidator allowedAuthorities={['canListDeal']} authorityKey="permissions">
-                hahahahhah
-            </RouteValidator>
-        </Layout>
+        <RouteValidator allowedAuthorities={['canListDeal']} authorityKey="permissions">
+            <p>123</p>
+            <_DealList/>
+        </RouteValidator>
     )
 }
-  //allowedAuthorities={['canListDeal']} authorityKey="permissions"
