@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { logout } from 'src/util/TokenProvider';
 import { getInfo } from 'src/util/TokenProvider';
 import Alert from 'src/components/common/modal/Alert';
 import BrowserProvider from 'src/util/browser/BrowserProvider';
+import {useRouter} from 'next/router'
 // import ChangePasswordForm from './ChangePassword/ChangePasswordForm';
 
 export default function RightNavBarLinks() {
@@ -12,6 +13,8 @@ export default function RightNavBarLinks() {
   const [collapse, setCollapse] = useState('');
   const [alert, setMessage] = useState({ show: false, content: '' });
   const [avatar, setAvatar] = useState('/images/default-avatar.png');
+  const router = useRouter();
+  const ref = useRef();
   useEffect(()=>{
     const info = getInfo();
     if (typeof info === 'object') {
@@ -22,7 +25,7 @@ export default function RightNavBarLinks() {
   function handleLogout(e) {
     e.preventDefault();
     logout();
-    window.location.reload();
+    router.push(BrowserProvider.getUrl('LOGIN'))
   }
 
   function onAvatarClick(e) {
@@ -47,9 +50,10 @@ export default function RightNavBarLinks() {
       <ul
         className="navbar-nav ml-auto"
         tabIndex="0"
+        ref={ref}
         onBlur={() => {
           setTimeout(() => {
-            setCollapse('');
+            ref.current && setCollapse('');
           }, 200);
         }}
       >

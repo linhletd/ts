@@ -1,12 +1,11 @@
-import { useHasAccess } from '../../hooks/useAuthority';
+import { useHasAccess } from 'src/hooks/useAuthority';
+import useIsMounted from 'src/hooks/useIsMounted';
 
 const ComponentValidator = ({ allowedAuthorities, authorityKey, children }) => {
   const hasAccess = useHasAccess(allowedAuthorities, authorityKey);
-  if (!hasAccess) {
-    return null;
-  }
+  const isMounted = useIsMounted();
 
-  return children;
+  return !isMounted ? null: hasAccess && children;
 };
 
 export default ComponentValidator;

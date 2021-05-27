@@ -9,15 +9,14 @@ let imgSource = {
   503: '503-service-unavailable.png',
   504: '504-gateway-timeout.png',
 };
-const requestImageFile = require.context('../../assets', false);
-export default function FallbackPage({ code, status }) {
-  let img = imgSource[code];
+export default function FallbackPage({ code, isLoading }) {
+  let img = imgSource[code] && `/images/${imgSource[code]}`;
   return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-      {status === 'loading' ? (
+      {isLoading ? (
         <ReactLoading type="spokes" height="5%" width="5%" color="#0099ff" className="pt-5" />
       ) : img ? (
-        <img src={requestImageFile(`./${img}`).default} className="img-fluid" />
+        <img src={img} className="img-fluid" />
       ) : code >= 400 ? (
         <h1 className="p-5">{code === 401 ? '401 Error - Unauthorized' : 'Unknown Error'}</h1>
       ) : null}

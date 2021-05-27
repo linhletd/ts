@@ -4,9 +4,10 @@ export function isLoggedIn() {
   return !!store.get('loggedIn');
 }
 
-export function login(data: Object) {
+export function login(data) {
   store.set('loggedIn', true);
   store.set('user', data);
+  data.userId && setCookie('userId', data.userId)
 }
 
 export function logout() {
@@ -15,6 +16,7 @@ export function logout() {
   store.set('permission', null);
   store.set('role', null);
   store.set('info', null);
+  deleteCookie('userId');
 }
 
 export function getToken() {
@@ -64,4 +66,11 @@ export function getInfo() {
 }
 export function getUser() {
   return { ...store.get('user') };
+}
+
+function setCookie(name, value) {
+  document.cookie = name +'='+ value +'; Path=/;';
+}
+function deleteCookie(name) {
+  document.cookie = name +'=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
 }
