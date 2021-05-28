@@ -10,8 +10,8 @@ interface Params {
   filter?: string
 }
 
-function SearchSelectAsync( {isMulti, apiKey, filterName, labelField, label, onChange, isClearable, isInvalid, disabled, subFilter, ...rest }) {
-  
+function SearchSelectAsync( {errors, isMulti, apiKey, filterName, labelField, label, onChange, isClearable, disabled, subFilter, ...rest }) {
+  const isInvalid = errors[rest.name]?.message;
   let [defaultData, setDefaultData] = useState([]);
   let subFilterText = subFilter &&
     Object.keys(subFilter).map((cur) => `${cur}==${subFilter[cur]}`).join(';');
@@ -40,6 +40,7 @@ function SearchSelectAsync( {isMulti, apiKey, filterName, labelField, label, onC
   }
 
   function getOptions(arr) {
+    arr = arr.content || arr;
     return arr
       .reduce((acc, cur) => {
         let opt = {
@@ -66,7 +67,7 @@ function SearchSelectAsync( {isMulti, apiKey, filterName, labelField, label, onC
         },
       }).then(({ code, data }) => {
         if (code === 200) {
-          return getOptions(data.content || data);
+          return getOptions(data);
         }
         return [];
       });

@@ -1,7 +1,8 @@
 import React from 'react';
 import withController from './withController';
 
-function InputNumber({onChange, isInvalid, label, placeholder, ...rest}) {
+function InputNumber({errors, onChange, label, placeholder, ...rest}) {
+  const isInvalid = errors[rest.name]?.message;
   function handleKeyDown(e) {
     if (e.code === 'KeyE') {
       e.preventDefault();
@@ -33,6 +34,7 @@ function InputNumber({onChange, isInvalid, label, placeholder, ...rest}) {
           onPaste={handlePaste}
           onKeyDown={handleKeyDown}
           onChange={handleOnChange}
+          className='form-control'
           {...rest}
         />
         {isInvalid && <small className='text-danger'>{isInvalid}</small>}

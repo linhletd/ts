@@ -4,7 +4,13 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { format } from 'date-fns';
 import withController from './withController';
 
-function DatePicker({field, label, onChange,  placeholder, disabled, timeOfDay, value, isInvalid, ...rest}) {
+const style = {
+  display: 'grid',
+  gridTemplateColumns: '1fr',
+};
+
+function DatePicker({errors, label, onChange,  placeholder, disabled, timeOfDay, value, ...rest}) {
+  const isInvalid = errors[rest.name]?.message;
   function handleOnChange(date) {
     if (!rest.disabled) {
       if (!rest.showTimeSelect && timeOfDay && date) {
@@ -18,7 +24,7 @@ function DatePicker({field, label, onChange,  placeholder, disabled, timeOfDay, 
     }
   }
   return (
-    <>
+    <div style={style}>
       {label && <label>{label}</label>}
       <_DatePicker
         selected={value}
@@ -26,10 +32,11 @@ function DatePicker({field, label, onChange,  placeholder, disabled, timeOfDay, 
         onChange={handleOnChange}
         disabled={disabled || false}
         placeholderText={placeholder || (label ? label + '...' : undefined)}
+        className='form-control'
         {...rest}
       />
       {isInvalid && <small className='text-danger'>{isInvalid}</small>}
-    </>
+    </div>
   );
 }
 

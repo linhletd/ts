@@ -1,7 +1,8 @@
 import React from 'react';
 import withController from './withController';
 
-function InputPhone({isInvalid, label, placeholder, onChange, ...rest}) {
+function InputPhone({errors, label, placeholder, onChange, ...rest}) {
+  const isInvalid = errors[rest.name]?.message;
   function handleChange(e){
     let val = e.target.value;
     val = val.replace(/\s+/g, '').replace(/^(0+)/, '');
@@ -19,6 +20,7 @@ function InputPhone({isInvalid, label, placeholder, onChange, ...rest}) {
         <input
           placeholder={placeholder || (label ? label + '...' : undefined)}
           onChange={handleChange}
+          className='form-control'
           {...rest}
         />
         {isInvalid && <small className='text-danger'>{isInvalid}</small>}

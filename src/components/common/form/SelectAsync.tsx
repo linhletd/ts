@@ -4,18 +4,17 @@ import APIProvider from '../../../util/api/url/APIProvider';
 import { createFetcher } from '../../../util/request';
 import useSWR from 'swr';
 
-function SelectAsync({ apiKey, stableQueryKey, shouldDisable, params, labelField, valueField, placeholder, excludes, dataCallback, reqMethod, loadedCallback, supplimentOptions, keepDataOnOption, ...rest }) {
-  if (reqMethod && reqMethod.toLowerCase() !== 'post') {
-    params = {
+function SelectAsync({ apiKey, stableQueryKey, shouldDisable, query, labelField, valueField, placeholder, excludes, dataCallback, reqMethod, loadedCallback, supplimentOptions, keepDataOnOption, ...rest }) {
+  if (!reqMethod || reqMethod.toLowerCase() !== 'post') {
+    query = {
       params: {
         size: 100,
-        ...params,
+        ...query,
       },
     };
   }
-
   const url = APIProvider.getUrl(apiKey);
-  const { data, error } = useSWR(!shouldDisable && [url, stableQueryKey], createFetcher(url, params, reqMethod));
+  const { data, error } = useSWR(!shouldDisable && [url, stableQueryKey], createFetcher(url, query, reqMethod));
 
   function generateLabel(obj) {
     if (labelField instanceof Array) {

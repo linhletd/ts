@@ -13,7 +13,8 @@ export default function withController(Component){
                 control={control}
                 defaultValue={defaulValue}
                 render={({field}) =>{
-                    return <Component {...field} {...rest}/>
+                    let {ref, ...remains} = field;
+                    return <Component {...remains} {...rest}/>
                 }}
                 />
             </ErrorBoundary>

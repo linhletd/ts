@@ -8,7 +8,8 @@ interface Option {
   label: string
 }
 
-function Select({isMulti, options, isInvalid, isClearable, disabled, label, placeholder, ...rest}){
+function Select({errors, isMulti, options, isClearable, disabled, label, placeholder, ...rest}){
+  const isInvalid = errors[rest.name]?.message;
   options = useMemo(() => {
     return options && options.sort((a: Option, b: Option) => a.label?.localeCompare(b.label)) || [];
   }, [options]);
@@ -37,7 +38,7 @@ const Option = (props) => {
   return (
     <div>
       <components.Option {...props} className="bg-light">
-        <input type="checkbox" checked={props.isSelected} /> <span>{props.label}</span>
+        <input type="checkbox" checked={props.isSelected} onChange={() => null}/> <span>{props.label}</span>
       </components.Option>
     </div>
   );

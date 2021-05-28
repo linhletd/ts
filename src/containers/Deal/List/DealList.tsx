@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 
 import DealListPaginatedItems from './DealListPaginatedItems';
-import DealFilter from '../Filter/DealFilter';
+import DealFilterForm from '../Filter/DealFilterForm';
 import RouteQueryValidator from 'src/components/generic/RouteQueryParamsValidator';
 import ErrorBoundary from 'src/components/generic/ErrorBoundary';
 import {mutate} from 'swr'
@@ -23,8 +23,7 @@ function _DealList() {
   return (
     <div className='col'>
       <ErrorBoundary>
-        <h1>Filter here!</h1>
-        {/* <DealFilter filterToPayload={filterToPayload} setFilterData={setFilterData} listChecked={checkedList} handleKeyReload={handleReload} filterData={filterData} /> */}
+        <DealFilterForm filterToPayload={filterToPayload} setFilterData={setFilterData} listChecked={checkedList} handleKeyReload={handleReload} />
       </ErrorBoundary>
       <DealListPaginatedItems filterData={vals} checkedList={checkedList} setListChecked={setListChecked} />
     </div>
@@ -42,8 +41,9 @@ function filterToPayload(filterData) {
   Object.keys(rest).map((cur) => {
     if (rest[cur] instanceof Array) {
       rest[cur].length && (vals[cur] = getArray(rest[cur]));
-    } else if (rest[cur]) {
-      vals[cur] = rest[cur];
+    }
+    else if (rest[cur]) {
+      vals[cur] = rest[cur]?.value || rest[cur]?.value;
     }
   });
   if (vals.owner) {

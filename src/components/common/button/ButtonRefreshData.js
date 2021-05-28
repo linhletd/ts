@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Alert from '../../components/Modal/Alert';
+import Alert from 'src/components/common/modal/Alert';
 import { Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 
